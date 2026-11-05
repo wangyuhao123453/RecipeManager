@@ -1,5 +1,7 @@
 # Recipe Management System — Student Starter
 
+GitHub repository: https://github.com/wangyuhao123453/RecipeManager
+
 Starter repository for Parts A and B. Implement `RecipeManager` in Core; the Application menu and JSON loader are supplied.
 
 ## What is supplied
