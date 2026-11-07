@@ -63,7 +63,10 @@ public sealed class RecipeManager : IRecipeManager
 
     public bool RemoveRecipe(int recipeId)
     {
-        // A planned recipe stays in the catalogue; it must leave the plan first.
+        // Two guards, either one means "do not remove":
+        // 1) the ID must actually exist in the catalogue, and
+        // 2) the recipe must not be sitting in the cooking plan - a planned
+        //    recipe can only be deleted after it has been removed from the plan.
         if (_catalogue.ContainsKey(recipeId) == false || _cookingPlan.Contains(recipeId))
         {
             return false;
@@ -121,19 +124,22 @@ public sealed class RecipeManager : IRecipeManager
 
     public bool RestoreLastRemovedRecipe()
     {
+        // Nothing to restore when the history stack is empty.
         if (_removedRecipes.Count == 0)
         {
             return false;
         }
 
-        // The ID leaves the history either way: a recipe deleted from the catalogue,
-        // or one already planned again, cannot be restored.
+        // Pop the most recently removed ID first. It leaves the history stack
+        // no matter what happens next: the restoration only succeeds when the
+        // recipe is still in the catalogue AND is not already back in the plan.
         int recipeId = _removedRecipes.Pop();
         if (_catalogue.ContainsKey(recipeId) == false || _cookingPlan.Contains(recipeId))
         {
             return false;
         }
 
+        // Success: the recipe goes back onto the end of the cooking plan.
         _cookingPlan.AddLast(recipeId);
         return true;
     }
