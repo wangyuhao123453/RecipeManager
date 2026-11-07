@@ -114,4 +114,22 @@ public sealed class RemovedHistoryTests
         Assert.Equal(new[] { 1 }, manager.GetCookingPlan());
         Assert.Equal(0, manager.RemovedRecipeCount);
     }
+
+    [Fact]
+    public void FailedRestoreAdvancesTheStackSoTheNextRestoreCanStillSucceed()
+    {
+        RecipeManager manager = TestRecipes.CreateManager();
+        manager.AddRecipeToCookingPlan(1);
+        manager.AddRecipeToCookingPlan(2);
+
+        manager.RemoveRecipeFromCookingPlan(2);
+        manager.RemoveRecipeFromCookingPlan(1);
+        Assert.True(manager.RemoveRecipe(1));
+
+        Assert.False(manager.RestoreLastRemovedRecipe());
+        Assert.Equal(2, manager.PeekLastRemovedRecipe());
+
+        Assert.True(manager.RestoreLastRemovedRecipe());
+        Assert.Equal(new[] { 2 }, manager.GetCookingPlan());
+    }
 }

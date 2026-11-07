@@ -83,4 +83,20 @@ public sealed class RecipeWorkflowTests
         Assert.False(manager.RemoveRecipe(missingId));
         Assert.False(manager.StartCooking(missingId));
     }
+
+    [Fact]
+    public void CookingSessionDoesNotChangeTheCookingPlan()
+    {
+        RecipeManager manager = TestRecipes.CreateManager();
+        manager.AddRecipeToCookingPlan(1);
+        manager.AddRecipeToCookingPlan(2);
+
+        Assert.True(manager.StartCooking(1));
+        while (manager.CompleteNextInstruction() is not null)
+        {
+        }
+
+        Assert.Equal(new[] { 1, 2 }, manager.GetCookingPlan());
+        Assert.Equal(2, manager.CookingPlanCount);
+    }
 }
