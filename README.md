@@ -35,6 +35,9 @@ dotnet test
 dotnet run --project RecipeManagement.Application -- data/recipes.json
 ```
 
+Part A status: `dotnet test` passes all 52 unit tests covering the catalogue,
+shopping list, cooking plan, removed-recipe history and instruction queue.
+
 Until you implement `RecipeManager`, menu options print a **Not implemented** message.
 
 ## AI acknowledgement
